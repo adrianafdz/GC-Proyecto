@@ -1,106 +1,98 @@
-// Seguí este tutorial: https://youtu.be/kB0ZVUrI4Aw
+import * as THREE from "./three.module.js";
+import { OrbitControls } from "./OrbitControls.js";
+import { crearTorre } from "./Objetos/torre.js";
+import { crearCuarto } from "./Objetos/room.js";
+import { crearDesk } from "./Objetos/desk.js";
+import { crearFan } from "./Objetos/fan.js";
+import { crearEspejo } from "./Objetos/mirror.js";
+import * as Items from "./Objetos/deskItems.js";
 
-const canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('webgl');
-
-if (!ctx) {
-    alert("Not supported");
-}
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('white');
 
 /*
-// RESIZE
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-ctx.viewport(0, 0, window.innerWidth, window.innerHeight);
+const loader = new THREE.TextureLoader();
+loader.load('./img/bg.jpg', (texture) => {
+    scene.background = texture;
+});
 */
 
-ctx.clearColor(235/255, 245/255, 245/255, 1.0);
-ctx.clear(ctx.COLOR_BUFFER_BIT | ctx.DEPTH_BUFFER_BIT);
-
-var vertexShaderTxt = `
-precision mediump float;
-attribute vec2 vertPosition;
-attribute vec3 vertColor;
-varying vec3 fragColor;
-void main() {
-    fragColor = vertColor;
-    gl_Position = vec4(vertPosition, 0.0, 1.0);
-}
-`
-
-var fragmentShaderTxt = `
-precision mediump float;
-varying vec3 fragColor;
-void main() {
-    gl_FragColor = vec4(fragColor, 1.0);
-}
-`
-
-var vertexShader = ctx.createShader(ctx.VERTEX_SHADER);
-var fragmentShader = ctx.createShader(ctx.FRAGMENT_SHADER);
-
-ctx.shaderSource(vertexShader, vertexShaderTxt);
-ctx.shaderSource(fragmentShader, fragmentShaderTxt);
-
-ctx.compileShader(vertexShader);
-if (!ctx.getShaderParameter(vertexShader, ctx.COMPILE_STATUS)) {
-    console.log(ctx.getShaderInfoLog(vertexShader));
-}
-
-ctx.compileShader(fragmentShader);
-if (!ctx.getShaderParameter(fragmentShader, ctx.COMPILE_STATUS)) {
-    console.log(ctx.getShaderInfoLog(fragmentShader));
-}
-
-var program = ctx.createProgram();
-ctx.attachShader(program, vertexShader);
-ctx.attachShader(program, fragmentShader);
-ctx.linkProgram(program);
-
-if (!ctx.getProgramParameter(program, ctx.LINK_STATUS)) {
-    console.log(ctx.getProgramInfoLog(program));
-}
-
-ctx.validateProgram(program);
-if (!ctx.getProgramParameter(program, ctx.VALIDATE_STATUS)) {
-    console.log(ctx.getProgramInfoLog(program));
-}
-
-var vertices =
-[
-    0.0,    0.5,    1.0, 1.0, 0.0,
-    -0.5,   -0.5,   0.0, 1.0, 1.0,
-    0.5,    -0.5,   0.1, 0.0, 1.0
-];
-
-var vertexBuffer = ctx.createBuffer();
-ctx.bindBuffer(ctx.ARRAY_BUFFER, vertexBuffer);
-ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array(vertices), ctx.STATIC_DRAW);
-
-var positionAttribLocation = ctx.getAttribLocation(program, 'vertPosition');
-var colorAttribLocation = ctx.getAttribLocation(program, 'vertColor');
-
-ctx.vertexAttribPointer(
-    positionAttribLocation, // Attribute location
-    2, // # elements per attribute
-    ctx.FLOAT, // type of elements
-    ctx.FALSE,
-    5 * Float32Array.BYTES_PER_ELEMENT, // size of one vertex
-    0 // offset 
+const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    5,
+    150
 );
 
-ctx.vertexAttribPointer(
-    colorAttribLocation, // Attribute location
-    3, // # elements per attribute
-    ctx.FLOAT, // type of elements
-    ctx.FALSE,
-    5 * Float32Array.BYTES_PER_ELEMENT, // size of one vertex
-    2 * Float32Array.BYTES_PER_ELEMENT // offset 
-);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-ctx.enableVertexAttribArray(positionAttribLocation);
-ctx.enableVertexAttribArray(colorAttribLocation);
+camera.position.z = 60;
+camera.position.y = 10;
 
-// main render loop
-ctx.useProgram(program);
-ctx.drawArrays(ctx.TRIANGLES, 0, 3);
+// controles
+const controls = new OrbitControls(camera, renderer.domElement);
+
+window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.render(scene, camera);
+});
+
+
+// PAREDES
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(150, 150), new THREE.MeshBasicMaterial({color: "rgb(184,160,140)",side: THREE.DoubleSide}));
+floor.rotation.x = Math.PI / 2;
+scene.add(floor);
+
+const room = crearCuarto();
+room.position.y = 15;
+scene.add(room);
+
+// TORRE
+const torre = crearTorre();
+torre.position.z = -15;
+torre.position.x = -25;
+torre.position.y = 12;
+scene.add(torre);
+
+// ESCRITORIO
+const desk = crearDesk();
+desk.position.z = -15;
+desk.position.y = 4;
+desk.position.x = -10;
+scene.add(desk);
+
+const monitor = Items.crearMonitor();
+monitor.position.z = -15;
+monitor.position.y = 11.5;
+scene.add(monitor);
+
+const teclado = Items.crearTeclado();
+teclado.position.z = -12;
+teclado.position.y = 8.25;
+scene.add(teclado);
+
+// ABANICO
+const fan = crearFan();
+fan.position.y = 29;
+scene.add(fan);
+
+// ESPEJO
+const mirror = crearEspejo();
+mirror.position.z = -19;
+mirror.position.y = 21;
+scene.add(mirror);
+
+// animaciones
+let animate = () => {
+    requestAnimationFrame(animate);
+    // cube.rotation.x += 0.01;
+    // cube.rotation.y += 0.01;
+
+    renderer.render(scene, camera);
+}
+
+animate();
