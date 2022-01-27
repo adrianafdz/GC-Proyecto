@@ -1,10 +1,11 @@
 import * as THREE from "../three.module.js";
 
-// Aspa
+// Función para crear un aspa de madera y el tubo que la conecta al centro del abanico 
 function crearAspa() {
     const whole = new THREE.Group();
 
-    const mWood = new THREE.MeshBasicMaterial({color: "rgb(89,60,31)"});
+    const textureWood = new THREE.TextureLoader().load( '../img/wood.jpg' );
+    const mWood = new THREE.MeshBasicMaterial( { map: textureWood } );
     const aspa = new THREE.Shape();
 
     const x = 0, y = 0;

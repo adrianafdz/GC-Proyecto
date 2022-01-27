@@ -5,6 +5,7 @@ import { crearCuarto } from "./Objetos/room.js";
 import { crearDesk } from "./Objetos/desk.js";
 import { crearFan } from "./Objetos/fan.js";
 import { crearEspejo } from "./Objetos/mirror.js";
+import { crearSillon } from "./Objetos/sillon.js";
 import * as Items from "./Objetos/deskItems.js";
 
 const scene = new THREE.Scene();
@@ -16,6 +17,8 @@ loader.load('./img/bg.jpg', (texture) => {
     scene.background = texture;
 });
 */
+
+const miny = 5;
 
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -29,10 +32,13 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 camera.position.z = 60;
-camera.position.y = 10;
+camera.position.y = 20;
 
 // controles
 const controls = new OrbitControls(camera, renderer.domElement);
+
+controls.minPolarAngle = 0;
+controls.maxPolarAngle = Math.PI;
 
 window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -41,9 +47,16 @@ window.addEventListener("resize", () => {
     renderer.render(scene, camera);
 });
 
-
 // PAREDES
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(150, 150), new THREE.MeshBasicMaterial({color: "rgb(184,160,140)",side: THREE.DoubleSide}));
+const textureFloor = new THREE.TextureLoader().load( './img/floor.jpg' );
+textureFloor.wrapT = THREE.RepeatWrapping;
+textureFloor.repeat.y = 8;
+textureFloor.wrapS = THREE.RepeatWrapping;
+textureFloor.repeat.x = 4;
+
+const mFloor = new THREE.MeshBasicMaterial( { map: textureFloor, side: THREE.DoubleSide } );
+
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(150, 150), mFloor);
 floor.rotation.x = Math.PI / 2;
 scene.add(floor);
 
@@ -65,14 +78,16 @@ desk.position.y = 4;
 desk.position.x = -10;
 scene.add(desk);
 
+// MONITOR
 const monitor = Items.crearMonitor();
 monitor.position.z = -15;
 monitor.position.y = 11.5;
 scene.add(monitor);
 
+// TECLADO
 const teclado = Items.crearTeclado();
 teclado.position.z = -12;
-teclado.position.y = 8.25;
+teclado.position.y = 8.35;
 scene.add(teclado);
 
 // ABANICO
@@ -86,11 +101,21 @@ mirror.position.z = -19;
 mirror.position.y = 21;
 scene.add(mirror);
 
+// SILLON
+const sillon = crearSillon();
+sillon.position.y = 4;
+sillon.rotation.y = Math.PI;
+sillon.position.z = 13;
+sillon.position.x = 10;
+scene.add(sillon);
+
 // animaciones
 let animate = () => {
     requestAnimationFrame(animate);
-    // cube.rotation.x += 0.01;
-    // cube.rotation.y += 0.01;
+    
+    if (camera.position.y <= miny) { // limitar movimiento vertical
+        camera.position.y = miny;
+    }
 
     renderer.render(scene, camera);
 }

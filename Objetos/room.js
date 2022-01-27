@@ -1,11 +1,13 @@
 import * as THREE from "../three.module.js";
 import CSG from "../three-csg.js";
 
-// Torre
+// Crea las 4 paredes del cuarto y el techo
 export function crearCuarto() {
     const room = new THREE.Group();
 
-    const mWall = new THREE.MeshBasicMaterial({color: 'aliceblue'}); 
+    //const textureWall = new THREE.TextureLoader().load( '../img/wall.jpg' );
+    const mWall = new THREE.MeshBasicMaterial( { color: 'aliceblue' } );
+
     const wall1 = new THREE.Mesh(new THREE.BoxGeometry(2, 30, 40), mWall);
     const wall2 = wall1.clone();
     const windowHole = new THREE.Mesh(new THREE.BoxGeometry(3, 12, 20));
@@ -48,9 +50,11 @@ export function crearCuarto() {
 
     let meshResultDoor = CSG.toMesh( bspResultDoor, wall4.matrix, wall4.material );
 
-    const roof = new THREE.Mesh(new THREE.BoxGeometry(62, 1, 42), new THREE.MeshBasicMaterial({
-        color: "rgb(210,225,225)"
-    }));
+    const textureRoof = new THREE.TextureLoader().load( '../img/roof.jpg' );
+    
+    const mRoof = new THREE.MeshBasicMaterial( { map: textureRoof } );
+
+    const roof = new THREE.Mesh(new THREE.BoxGeometry(62, 1, 42), mRoof);
     roof.position.y = 15;
 
     room.add(wall1);

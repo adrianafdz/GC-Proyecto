@@ -1,13 +1,14 @@
 import * as THREE from "../three.module.js";
 
+// En este archivo se encuentran algunas funciones pequeñas para crear algunos objetos que van sobre el escritorio
+
 export function crearMonitor() {
-    console.log("crear monitor")
     const whole = new THREE.Group();
 
     const mMonitor = new THREE.MeshBasicMaterial({color: 'black'});
-    const pantallaOut = new THREE.Mesh(new THREE.BoxGeometry(10,4,0.25), mMonitor);
+    const pantalla = new THREE.Mesh(new THREE.BoxGeometry(10,4,0.25), mMonitor);
 
-    pantallaOut.position.z = -0.2;
+    pantalla.position.z = -0.2;
 
     const baseArc = new THREE.Mesh(new THREE.TorusGeometry(2,0.2,5,10,3), mMonitor);
     baseArc.rotation.x = - Math.PI  / 2;
@@ -18,7 +19,7 @@ export function crearMonitor() {
     base.position.y = -2;
     base.position.z = -0.5;
 
-    whole.add(pantallaOut);
+    whole.add(pantalla);
     whole.add(baseArc);
     whole.add(base);
 
@@ -26,6 +27,9 @@ export function crearMonitor() {
 }
 
 export function crearTeclado() {
-    const teclado = new THREE.Mesh(new THREE.BoxGeometry(6,0.5,2), new THREE.MeshBasicMaterial({color: 'aliceblue'}));
+    const textureTeclado = new THREE.TextureLoader().load( '../img/keyboard.png' );
+    const mTeclado = new THREE.MeshBasicMaterial( { map: textureTeclado } );
+
+    const teclado = new THREE.Mesh(new THREE.BoxGeometry(6,0.25,2), mTeclado);
     return teclado;
 }

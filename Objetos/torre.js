@@ -1,13 +1,15 @@
 import * as THREE from "../three.module.js";
 import CSG from "../three-csg.js";
 
-// Torre
+// Función para crear la torre para gato
 export function crearTorre() {
-    // Pisos
     const torre = new THREE.Group();
 
+    // Pisos
+    const textureTela = new THREE.TextureLoader().load( '../img/tela.jpg' );
+    const mLevel = new THREE.MeshBasicMaterial( { map: textureTela } );
+
     const topLevel = new THREE.BoxGeometry(5,0.2,5);
-    const mLevel = new THREE.MeshBasicMaterial({color: "gray"});
 
     const level11 = new THREE.Mesh(topLevel, mLevel);
     const level12 = new THREE.Mesh(topLevel, mLevel);
@@ -29,7 +31,7 @@ export function crearTorre() {
     // Caja
     let outsideBox = new THREE.Mesh(new THREE.BoxGeometry(6,5,5), mLevel)
     let insideBox = new THREE.Mesh(new THREE.BoxGeometry(5.6,4.6,2.6), new THREE.MeshBasicMaterial({color: "black"}));
-    let subbox = new THREE.Mesh(new THREE.BoxGeometry(4,6,6));
+    let subbox = new THREE.Mesh(new THREE.BoxGeometry(4,6,6)); // caja para cortar las otras dos
 
     outsideBox.position.x = 5;
     outsideBox.position.y = -8;
@@ -61,8 +63,12 @@ export function crearTorre() {
     torre.add(meshResult2);
 
     // Tubos
+    const textureTubo = new THREE.TextureLoader().load( '../img/mecate.jpg' );
+    textureTubo.wrapT = THREE.RepeatWrapping;
+    textureTubo.repeat.y = 10;
+
+    const mTubo = new THREE.MeshBasicMaterial( { map: textureTubo } );
     const gTubo = new THREE.CylinderGeometry(0.5, 0.5, 12, 30);
-    const mTubo = new THREE.MeshBasicMaterial({color: "rgb(237,220,187)"});
 
     const tubo1 = new THREE.Mesh(gTubo,mTubo);
     const tubo2 = new THREE.Mesh(gTubo,mTubo);
