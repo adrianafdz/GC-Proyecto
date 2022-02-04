@@ -104,7 +104,7 @@ scene.add(mirror);
 
 // SILLON
 const sillon = crearSillon();
-sillon.position.set(13,4,10);
+sillon.position.set(13,4,13);
 sillon.rotation.y = Math.PI;
 scene.add(sillon);
 
@@ -125,7 +125,7 @@ const sillaMtl = new MTLLoader().load('./Objetos/Office_chair.mtl', function(mat
 })
 
 // LUZ
-let ambientLight = new THREE.AmbientLight('#fff', 0.7);
+let ambientLight = new THREE.AmbientLight('#fff', 0.65);
 scene.add(ambientLight);
 
 let luzSol = new THREE.DirectionalLight(0xFFFACD, 0.2)

@@ -3,6 +3,8 @@ Proyecto de Gráficas Computacionales con three.js
 
 Adriana Fernández López A01197148
 
+Video demostración: https://youtu.be/7GwREOjyYlw
+
 ## Descripción
 La escena consiste de una modelación de una habitación en mi casa y algunas de las cosas que se encuentran dentro. Principalmente me enfoqué en modelar el abánico, ya que este es mi elemento animado e interactivo. Aparte de eso, me enfoqué en modelar la torre de mis gatos, un sillón, el escritorio, el monitor y un espejo.
 
