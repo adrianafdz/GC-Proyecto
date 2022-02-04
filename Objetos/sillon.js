@@ -5,30 +5,19 @@ export function crearSillon() {
     const sillon = new THREE.Group();
 
     const textureTela = new THREE.TextureLoader().load( '../img/sillon.jpg' );
-    const mTela = new THREE.MeshBasicMaterial( { map: textureTela } );
+    const mTela = new THREE.MeshLambertMaterial( { map: textureTela } );
 
-    const mPata = new THREE.MeshBasicMaterial( { color: 'black' } );
+    const mPata = new THREE.MeshLambertMaterial( { color: 'black' } );
 
     const pata1 = new THREE.Mesh(new THREE.BoxGeometry(1.5,4,1.5), mPata);
     const pata2 = pata1.clone()
     const pata3 = pata1.clone()
     const pata4 = pata1.clone()
 
-    pata1.position.y = -2;
-    pata1.position.x = -10;
-    pata1.position.z = -3;
-
-    pata2.position.y = -2;
-    pata2.position.x = -10;
-    pata2.position.z = 4.25;
-
-    pata3.position.y = -2;
-    pata3.position.x = 10;
-    pata3.position.z = -3;
-
-    pata4.position.y = -2;
-    pata4.position.x = 10;
-    pata4.position.z = 4.25;  
+    pata1.position.set(-10, -2, -3);
+    pata2.position.set(-10, -2, 4.25);
+    pata3.position.set(10, -2, -3);
+    pata4.position.set(10, -2, 4.25);
     
     const base = new THREE.Shape(); 
 
@@ -51,14 +40,21 @@ export function crearSillon() {
     const meshResp = new THREE.Mesh( geoResp, mTela ) ;
 
     meshResp.rotation.x = - Math.PI / 10;
-    meshResp.position.y = 6.25;
-    meshResp.position.x = -11;
-    meshResp.position.z = -5.5;
+    meshResp.position.set(-11, 6.25, -5.5);
 
     meshBase.rotation.x = Math.PI / 2;
-    meshBase.position.y = 1;
-    meshBase.position.x = -11;
-    meshBase.position.z = 5;
+    meshBase.position.set(-11, 1, 5);
+
+    pata1.receiveShadow = true;
+    pata1.castShadow = true;
+    pata2.receiveShadow = true;
+    pata2.castShadow = true;
+    pata3.receiveShadow = true;
+    pata3.castShadow = true;
+    pata4.receiveShadow = true;
+    pata4.castShadow = true;
+    meshResp.castShadow = true;
+    meshBase.castShadow = true;
 
     sillon.add(meshResp);
     sillon.add(meshBase);

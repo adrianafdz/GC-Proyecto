@@ -13,23 +13,23 @@ import * as Items from "./Objetos/deskItems.js";
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('white');
 
-/*
 const loader = new THREE.TextureLoader();
 loader.load('./img/bg.jpg', (texture) => {
     scene.background = texture;
 });
-*/
 
 const miny = 5;
 
 const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
-    5
+    5,
+    200
 );
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
 camera.position.z = 60;
@@ -38,6 +38,8 @@ camera.position.y = 20;
 // controles
 const controls = new OrbitControls(camera, renderer.domElement);
 
+controls.minDistance = 3;
+controls.maxDistance = 100;
 controls.minPolarAngle = 0;
 controls.maxPolarAngle = Math.PI;
 
@@ -51,13 +53,15 @@ window.addEventListener("resize", () => {
 // PAREDES
 const textureFloor = new THREE.TextureLoader().load( './img/floor.jpg' );
 textureFloor.wrapT = THREE.RepeatWrapping;
-textureFloor.repeat.y = 8;
+textureFloor.repeat.y = 16;
 textureFloor.wrapS = THREE.RepeatWrapping;
-textureFloor.repeat.x = 4;
+textureFloor.repeat.x = 8;
 
-const mFloor = new THREE.MeshBasicMaterial( { map: textureFloor, side: THREE.DoubleSide } );
+const mFloor = new THREE.MeshPhongMaterial( { map: textureFloor, side: THREE.DoubleSide } );
 
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(150, 150), mFloor);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), mFloor);
+floor.receiveShadow = true;
+
 floor.rotation.x = Math.PI / 2;
 scene.add(floor);
 
@@ -67,16 +71,12 @@ scene.add(room);
 
 // TORRE
 const torre = crearTorre();
-torre.position.z = -15;
-torre.position.x = -25;
-torre.position.y = 12;
+torre.position.set(-25, 12, -15);
 scene.add(torre);
 
 // ESCRITORIO
 const desk = crearDesk();
-desk.position.z = -15;
-desk.position.y = 4;
-desk.position.x = -10;
+desk.position.set(-10,4,-15);
 scene.add(desk);
 
 // MONITOR
@@ -104,14 +104,9 @@ scene.add(mirror);
 
 // SILLON
 const sillon = crearSillon();
-sillon.position.y = 4;
+sillon.position.set(13,4,10);
 sillon.rotation.y = Math.PI;
-sillon.position.z = 13;
-sillon.position.x = 10;
 scene.add(sillon);
-
-var ambientLight = new THREE.AmbientLight('#fff');
-scene.add(ambientLight);
 
 // SILLA IMPORTADA
 // // https://free3d.com/3d-model/office-chair-871087.html
@@ -122,13 +117,37 @@ const sillaMtl = new MTLLoader().load('./Objetos/Office_chair.mtl', function(mat
         './Objetos/Office_chair.obj', 
         (object) => {
             object.rotation.y = Math.PI;
-            object.scale.x = 0.013;
-            object.scale.y = 0.013;
-            object.scale.z = 0.013;
+            object.traverse(function(child){child.castShadow = true;});
+            object.scale.set(0.013, 0.013, 0.013);
             object.position.z = -6;
             scene.add( object );
         });
 })
+
+// LUZ
+let ambientLight = new THREE.AmbientLight('#fff', 0.7);
+scene.add(ambientLight);
+
+let luzSol = new THREE.DirectionalLight(0xFFFACD, 0.2)
+luzSol.position.set(20, 80, 0);
+scene.add(luzSol);
+
+let luzFoco = new THREE.PointLight(0xFFFACD, 0.5, 100);
+luzFoco.castShadow = true;
+luzFoco.position.y = 25;
+scene.add(luzFoco);
+
+// INTERACCION - presionar enter para prender la luz y el abanico
+let abanicoOn = false;
+let maxspeed = 0.15;
+let minspeed = 0.0005;
+let speed = minspeed;
+
+window.addEventListener("keydown", (event) => {
+    if (event.code == 'Space') {
+        abanicoOn = !abanicoOn;
+    }
+});
 
 // animaciones
 let animate = () => {
@@ -137,6 +156,28 @@ let animate = () => {
     if (camera.position.y <= miny) { // limitar movimiento vertical
         camera.position.y = miny;
     }
+
+    if (!abanicoOn) {
+        luzFoco.intensity = 0;
+
+        // efecto de que se va alentando
+        if (speed > minspeed) {
+            fan.rotation.y += speed;
+            speed -= minspeed;
+        }
+
+    } else {
+        luzFoco.intensity = 0.5;
+        fan.rotation.y += speed;
+
+        // efecto de que empieza lento
+        if (speed >= maxspeed) {
+            speed = maxspeed;
+        } else {
+            speed += minspeed;
+        }
+    }
+    
 
     renderer.render(scene, camera);
 }

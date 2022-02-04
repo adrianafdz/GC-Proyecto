@@ -5,7 +5,7 @@ import * as THREE from "../three.module.js";
 export function crearMonitor() {
     const whole = new THREE.Group();
 
-    const mMonitor = new THREE.MeshBasicMaterial({color: 'black'});
+    const mMonitor = new THREE.MeshLambertMaterial({color: 'black'});
     const pantalla = new THREE.Mesh(new THREE.BoxGeometry(10,4,0.25), mMonitor);
 
     pantalla.position.z = -0.2;
@@ -19,6 +19,13 @@ export function crearMonitor() {
     base.position.y = -2;
     base.position.z = -0.5;
 
+    pantalla.receiveShadow = true;
+    pantalla.castShadow = true;
+    base.receiveShadow = true;
+    base.castShadow = true;
+    baseArc.receiveShadow = true;
+    baseArc.castShadow = true;
+
     whole.add(pantalla);
     whole.add(baseArc);
     whole.add(base);
@@ -28,7 +35,7 @@ export function crearMonitor() {
 
 export function crearTeclado() {
     const textureTeclado = new THREE.TextureLoader().load( '../img/keyboard.png' );
-    const mTeclado = new THREE.MeshBasicMaterial( { map: textureTeclado } );
+    const mTeclado = new THREE.MeshLambertMaterial( { map: textureTeclado } );
 
     const teclado = new THREE.Mesh(new THREE.BoxGeometry(6,0.25,2), mTeclado);
     return teclado;

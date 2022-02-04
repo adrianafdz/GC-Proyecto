@@ -5,7 +5,7 @@ function crearAspa() {
     const whole = new THREE.Group();
 
     const textureWood = new THREE.TextureLoader().load( '../img/wood.jpg' );
-    const mWood = new THREE.MeshBasicMaterial( { map: textureWood } );
+    const mWood = new THREE.MeshLambertMaterial( { map: textureWood } );
     const aspa = new THREE.Shape();
 
     const x = 0, y = 0;
@@ -16,7 +16,7 @@ function crearAspa() {
     const geometry = new THREE.ExtrudeGeometry( aspa, {depth: 0.25} );
     const meshAspa = new THREE.Mesh( geometry, mWood ) ;
 
-    const mMetal = new THREE.MeshBasicMaterial({color: "black"});
+    const mMetal = new THREE.MeshPhongMaterial({color: "black"});
     const palo = new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.25,3,20), mMetal);
 
     palo.position.y = -1;
@@ -39,14 +39,19 @@ export function crearFan() {
         fan.add(aspa);
     }
 
-    const mMetal = new THREE.MeshBasicMaterial({color: "black"});
+    const mMetal = new THREE.MeshPhongMaterial({color: "black"});
     const center = new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.5,2,20), mMetal);
 
     const baseFoco = new THREE.Mesh(new THREE.CylinderGeometry(1,1,1,20), mMetal);
     baseFoco.position.z = 1;
 
-    const foco = new THREE.Mesh(new THREE.SphereGeometry(0.75,5,5), new THREE.MeshBasicMaterial({color: 'yellow'}));
+    const foco = new THREE.Mesh(new THREE.SphereGeometry(0.65,15,15), new THREE.MeshBasicMaterial({color: 0xFFFACD}));
     foco.position.y = -1.5;
+
+    baseFoco.receiveShadow = true;
+    baseFoco.castShadow = true;
+    center.receiveShadow = true;
+    center.castShadow = true;
 
     fan.add(baseFoco);
     fan.add(center);

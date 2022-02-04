@@ -6,7 +6,7 @@ export function crearCuarto() {
     const room = new THREE.Group();
 
     //const textureWall = new THREE.TextureLoader().load( '../img/wall.jpg' );
-    const mWall = new THREE.MeshBasicMaterial( { color: 'aliceblue' } );
+    const mWall = new THREE.MeshLambertMaterial( { color: 'aliceblue' } );
 
     const wall1 = new THREE.Mesh(new THREE.BoxGeometry(2, 30, 40), mWall);
     const wall2 = wall1.clone();
@@ -33,12 +33,8 @@ export function crearCuarto() {
     const doorHole = door.clone();
 
     wall4.position.z = 20;
-    door.position.z = 20;
-    door.position.x = -15;
-    door.position.y = -1;
-    doorHole.position.z = 20;
-    doorHole.position.x = -15;
-    doorHole.position.y = -10;
+    door.position.set(-15, -1, 20);
+    doorHole.position.set(-15, -10, 20);
 
     wall4.updateMatrix();
     doorHole.updateMatrix();
@@ -52,10 +48,22 @@ export function crearCuarto() {
 
     const textureRoof = new THREE.TextureLoader().load( '../img/roof.jpg' );
     
-    const mRoof = new THREE.MeshBasicMaterial( { map: textureRoof } );
+    const mRoof = new THREE.MeshLambertMaterial( { map: textureRoof } );
 
     const roof = new THREE.Mesh(new THREE.BoxGeometry(62, 1, 42), mRoof);
     roof.position.y = 15;
+
+    wall1.receiveShadow = true;
+    meshResultWindow.receiveShadow = true;
+    wall3.receiveShadow = true;
+    meshResultDoor.receiveShadow = true;
+    roof.receiveShadow = true;
+
+    wall1.castShadow = true;
+    meshResultWindow.castShadow = true;
+    wall3.castShadow = true;
+    meshResultDoor.castShadow = true;
+    roof.castShadow = true;
 
     room.add(wall1);
     room.add(meshResultWindow);

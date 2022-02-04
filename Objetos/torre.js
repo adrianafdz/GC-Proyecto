@@ -7,7 +7,7 @@ export function crearTorre() {
 
     // Pisos
     const textureTela = new THREE.TextureLoader().load( '../img/tela.jpg' );
-    const mLevel = new THREE.MeshBasicMaterial( { map: textureTela } );
+    const mLevel = new THREE.MeshLambertMaterial( { map: textureTela } );
 
     const topLevel = new THREE.BoxGeometry(5,0.2,5);
 
@@ -28,6 +28,16 @@ export function crearTorre() {
     torre.add(level21);
     torre.add(floor);
 
+    level11.castShadow = true;
+    level12.castShadow = true;
+    level21.castShadow = true
+    floor.castShadow = true;
+
+    level11.receiveShadow = true;
+    level12.receiveShadow = true;
+    level21.receiveShadow = true;
+    floor.receiveShadow = true;
+
     // Caja
     let outsideBox = new THREE.Mesh(new THREE.BoxGeometry(6,5,5), mLevel)
     let insideBox = new THREE.Mesh(new THREE.BoxGeometry(5.6,4.6,2.6), new THREE.MeshBasicMaterial({color: "black"}));
@@ -38,9 +48,7 @@ export function crearTorre() {
     insideBox.position.x = 5;
     insideBox.position.y = -8;
 
-    subbox.position.x = 1;
-    subbox.position.y = -8;
-    subbox.position.z = 1.5;
+    subbox.position.set(1, -8, 1.5);
     subbox.rotation.y = 0.75;
 
     outsideBox.updateMatrix();
@@ -59,6 +67,11 @@ export function crearTorre() {
     
     meshResult2.position.x -= 0.1;
 
+    meshResult1.castShadow = true;
+    meshResult2.castShadow = true;
+    meshResult1.receiveShadow = true;
+    meshResult2.receiveShadow = true;
+
     torre.add(meshResult1);
     torre.add(meshResult2);
 
@@ -67,7 +80,7 @@ export function crearTorre() {
     textureTubo.wrapT = THREE.RepeatWrapping;
     textureTubo.repeat.y = 10;
 
-    const mTubo = new THREE.MeshBasicMaterial( { map: textureTubo } );
+    const mTubo = new THREE.MeshLambertMaterial( { map: textureTubo } );
     const gTubo = new THREE.CylinderGeometry(0.5, 0.5, 12, 30);
 
     const tubo1 = new THREE.Mesh(gTubo,mTubo);
@@ -79,6 +92,13 @@ export function crearTorre() {
     tubo2.position.y = -6;
     tubo3.position.y = -5;
     tubo3.position.x = 3;
+
+    tubo1.castShadow = true;
+    tubo2.castShadow = true;
+    tubo3.castShadow = true;
+    tubo1.receiveShadow = true;
+    tubo2.receiveShadow = true;
+    tubo3.receiveShadow = true;
 
     torre.add(tubo1);
     torre.add(tubo2);

@@ -7,7 +7,7 @@ export function crearEspejo() {
 
     // parte de madera
     const textureWood = new THREE.TextureLoader().load( '../img/wood.jpg' );
-    const mWood = new THREE.MeshBasicMaterial( { map: textureWood } );
+    const mWood = new THREE.MeshLambertMaterial( { map: textureWood } );
     const back = new THREE.Shape();
 
     const x = 0, y = 0;
@@ -36,6 +36,9 @@ export function crearEspejo() {
     } );
 
     mMirror.position.z = 0.5;
+
+    meshBack.receiveShadow = true;
+    meshBack.castShadow = true;
 
     whole.add(meshBack);
     whole.add(mMirror);
