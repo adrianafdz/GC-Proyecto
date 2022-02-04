@@ -51,6 +51,7 @@ export function crearTorre() {
     subbox.position.set(1, -8, 1.5);
     subbox.rotation.y = 0.75;
 
+    // Cortar esquina de la caja
     outsideBox.updateMatrix();
     insideBox.updateMatrix();
     subbox.updateMatrix();

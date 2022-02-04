@@ -18,6 +18,7 @@ export function crearCuarto() {
     windowHole.position.x = 30;
     wall3.position.z = -20;
 
+    // Cortar ventana en la pared
     wall2.updateMatrix();
     windowHole.updateMatrix();
 
@@ -36,6 +37,7 @@ export function crearCuarto() {
     door.position.set(-15, -1, 20);
     doorHole.position.set(-15, -10, 20);
 
+    // Cortar hueco de la puerta en la pared
     wall4.updateMatrix();
     doorHole.updateMatrix();
 
